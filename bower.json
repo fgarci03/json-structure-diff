@@ -1,0 +1,21 @@
+{
+  "name": "json-structure-diff",
+  "main": "index.js",
+  "version": "0.0.3",
+  "homepage": "https://github.com/fgarci03/json-structure-diff",
+  "authors": [
+    "Filipe Garcia <garcia.filipeandre@gmail.com>"
+  ],
+  "description": "Compare JSON objects for structure equality, despite the actual content",
+  "moduleType": [
+    "node"
+  ],
+  "license": "ISC",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
