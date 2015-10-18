@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+  <script src="index.js"></script>
+</head>
+<body>
+<pre id="simple"></pre>
+<pre id="custom"></pre>
+
+<script>
+  var obj1 = {
+    parent: 'nameOfObject',
+    content: {
+      whatever: 'you',
+      want: {
+        here: '!'
+      }
+    }
+  };
+
+  var obj2 = {
+    parent: 'nameOfComparedObject',
+    content: {
+      whatever: 'you',
+      want: {
+        here: {
+          is: 'cool',
+          right: '?'
+        }
+      }
+    }
+  };
+
+  var obj3 = {
+    parent: 'nameOfAnotherComparedObject',
+    content: {
+      whatever: {},
+      want: {
+        here: {
+          is: 'cool',
+          right: '?'
+        }
+      }
+    }
+  };
+
+  document.getElementById('simple').innerHTML = JSON.stringify(jsonStructureDiff.compareJSONObjects([obj1, obj2]));
+  document.getElementById('custom').innerHTML = jsonStructureDiff.compareJSONObjects([obj1, obj2, obj3], {humanReadable: true});
+</script>
+</body>
+</html>

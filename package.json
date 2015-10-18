@@ -1,7 +1,7 @@
 {
   "name": "json-structure-diff",
   "description": "Compare JSON objects for structure equality, despite the actual content",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {},
   "scripts": {
     "lint": "eslint -f unix .",

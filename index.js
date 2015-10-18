@@ -8,7 +8,44 @@
 (function () {
   'use strict';
 
+  var root = typeof self === 'object' && self.self === self && self ||
+    typeof global === 'object' && global.global === global && global ||
+    this;
+
+  // Create a safe reference to the Logical object for use below.
+  var jsonStructureDiff = function (obj) {
+    if (obj instanceof jsonStructureDiff) return obj;
+    if (!(this instanceof jsonStructureDiff)) return new jsonStructureDiff(obj);
+  };
+
+  // Save the previous value of the `logical` variable.
+  var previousJsonStructureDiff = root.jsonStructureDiff;
+
+  // Run Logical.js in *noConflict* mode, returning the `logical` variable to its
+  // previous owner. Returns a reference to the Logical object.
+  jsonStructureDiff.noConflict = function () {
+    root.jsonStructureDiff = previousJsonStructureDiff;
+    return this;
+  };
+
+  // Current version.
+  jsonStructureDiff.VERSION = '0.0.2';
+
+
+  //-------------
+
   var errors = [];
+
+  function checkIfIsCircular(objects) {
+    for (var i = 0; i < objects.length; i++) {
+      try {
+        JSON.stringify(objects[i]);
+      }
+      catch (e) {
+        throw "Object has circular references!";
+      }
+    }
+  }
 
   function compare(objs, options) {
     // iterate the array of objects to compare
@@ -72,12 +109,46 @@
     return errors.length ? errors : null;
   }
 
-  module.exports = {
-    compareJSONObjects: function (srcObjs, options) {
-      errors = [];
-      options = options ? options : {};
-      options.nested = false;
-      return compare(srcObjs, options);
-    }
+  /**
+   * Compares JSON objects for their structure
+   *
+   * @param {Array} srcObjs   The objects to compare
+   * @param {Object} options  Customization options
+   * @returns {Array}         List of errors
+   */
+  jsonStructureDiff.compareJSONObjects = function (srcObjs, options) {
+    errors = [];
+    options = options ? options : {};
+    options.nested = false;
+    checkIfIsCircular(srcObjs);
+    return compare(srcObjs, options);
   };
+
+  //-------------
+
+  // Export the Logical object for **Node.js**, with
+  // backwards-compatibility for their old module API. If we're in
+  // the browser, add `logical` as a global object.
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = jsonStructureDiff;
+    } else {
+      exports.jsonStructureDiff = jsonStructureDiff;
+    }
+  } else {
+    root.jsonStructureDiff = jsonStructureDiff;
+  }
+
+  // AMD registration happens at the end for compatibility with AMD loaders
+  // that may not enforce next-turn semantics on modules. Even though general
+  // practice for AMD registration is to be anonymous, Logical registers
+  // as a named module because, like jQuery, it is a base library that is
+  // popular enough to be bundled in a third party lib, but not be part of
+  // an AMD load request. Those cases could generate an error when an
+  // anonymous define() is called outside of a loader request.
+  if (typeof define === 'function' && define.amd) {
+    define('jsonStructureDiff', [], function () {
+      return jsonStructureDiff;
+    });
+  }
 })();
