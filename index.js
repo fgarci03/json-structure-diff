@@ -24,19 +24,18 @@
             var separator = !options.nested && options.humanReadable ? ' > ' : '.';
 
             // iterate the rest of the array to get the remaining objects
-            for (var j = i + 1; j < objs.length; j++) {
+            for (var j = i; j < objs.length; j++) {
               var comparedJson = objs[j];
 
               var parentJson = json.parent + separator + prop;
-              var jsonContent = json.content[prop];
-
               var comparedParentJson = comparedJson.parent + separator + prop;
+
+              var jsonContent = json.content[prop];
               var comparedJsonContent = comparedJson.content[prop];
 
               if (typeof jsonContent === typeof comparedJsonContent) {
-
-                // if the property is also an object, recursively check it
-                if (typeof jsonContent === 'object') {
+                // if the property is also an object (and has data), recursively check it
+                if (typeof jsonContent === 'object' && Object.keys(jsonContent).length) {
                   var formattedObjects = [
                     {
                       parent: parentJson,
@@ -49,6 +48,8 @@
                   ];
                   options.nested = true;
                   compare(formattedObjects, options);
+                } else {
+                  options.nested = false;
                 }
               } else {
                 if (options.humanReadable) {

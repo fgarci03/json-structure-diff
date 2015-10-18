@@ -23,5 +23,18 @@ var obj2 = {
   }
 };
 
+var obj3 = {
+  parent: 'nameOfAnotherComparedObject',
+  content: {
+    whatever: {},
+    want: {
+      here: {
+        is: 'cool',
+        right: '?'
+      }
+    }
+  }
+};
+
 console.log(compare([obj1, obj2]));
-console.log(compare([obj1, obj2], {humanReadable: true}));
+console.log(compare([obj1, obj2, obj3], {humanReadable: true}));
